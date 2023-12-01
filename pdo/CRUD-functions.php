@@ -1,13 +1,45 @@
 <?php
 
-function create($conn){
+class ContactCRUD {
+
+    //Properties 
+    private $conn;
+
+
+    function __construct()
+    {
+
+        $servername = "db";
+        $username = "mariadb";
+        $password = "mariadb";
+        $dbname = "mariadb";
+
+        try {
+        //mariadb eller my sql så:
+        $this->conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+
+        $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            echo "Connected successfully <br>";
+        } catch (PDOException $e) {
+            echo "Connection failed: " . $e->getMessage();
+        }
+
+    }
+
+    function __destruct()
+    {
+        $this->conn = null;
+    }
+
+    //Alla 4 metoder
+function create(){
 
     try{
 
         $sql = "INSERT INTO Contacts(firstname, lastname, email)
         VALUES ('Joseph', 'Gros', 'wiley.joseph.gros@gmail.com')";
     
-        $conn->exec($sql);
+        $this->conn->exec($sql);
     
         echo "New record created successfully";
     
@@ -17,13 +49,13 @@ function create($conn){
 
 }
 
-function read($conn){
+function read(){
 
     try {
     
         $sql = "SELECT firstname, lastname, email, favorite FROM Contacts";
     
-        $stmt = $conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
     
         // $result = $stmt->setFetchMode(PDO::FETCH_ASSOC);
@@ -44,13 +76,13 @@ function read($conn){
 
 }
 
-function update($conn, $param){
+function update($param){
 
     try{
 
         $sql = "UPDATE Contacts SET firstname='Anna', lastname='Holmqvist' WHERE id=:id";
     
-        $stmt = $conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
 
         $stmt->bindParam(":id", $param);
 
@@ -65,13 +97,13 @@ function update($conn, $param){
 
 }
 
-function delete($conn, $param){
+function delete($param){
 
     try {
 
         $sql = "DELETE FROM Contacts WHERE id=:id";
     
-        $stmt = $conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
 
         $stmt->bindParam(":id", $param);
 
@@ -82,6 +114,8 @@ function delete($conn, $param){
     } catch (PDOException $e) {
         echo $sql . "<br>" . $e->getMessage();
     }
+
+}
 
 }
 

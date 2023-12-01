@@ -5,7 +5,9 @@ include_once("CRUD-functions.php");
 
 $param = $_GET["param"];
 
-update($conn, $param);
+$cc = new ContactCRUD();
+
+$cc->update($param);
 
 $conn = null;
 ?>
